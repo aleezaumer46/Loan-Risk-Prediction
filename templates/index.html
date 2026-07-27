@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Risk Prediction</title>\
+     <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Loan Risk Prediction System</h1>
+
+<form action="/predict" method="POST">
+
+    <label>Income</label><br>
+    <input type="number" name="Income" required><br><br>
+
+    <label>Age</label><br>
+    <input type="number" name="Age" required><br><br>
+
+    <label>Experience</label><br>
+    <input type="number" name="Experience" required><br><br>
+
+    <label>Married/Single</label><br>
+    <select name="Married/Single">
+        <option value="single">Single</option>
+        <option value="married">Married</option>
+    </select><br><br>
+
+    <label>House Ownership</label><br>
+    <select name="House_Ownership">
+        <option value="owned">Owned</option>
+        <option value="rented">Rented</option>
+        <option value="norent_noown">No Rent No Own</option>
+    </select><br><br>
+
+    <label>Car Ownership</label><br>
+    <select name="Car_Ownership">
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select><br><br>
+
+    <label>Profession</label><br>
+    <select name="Profession">
+        {% for p in professions %}
+            <option value="{{ p }}">{{ p }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>City</label><br>
+    <select name="CITY">
+        {% for city in cities %}
+            <option value="{{ city }}">{{ city }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>State</label><br>
+    <select name="STATE">
+        {% for state in states %}
+            <option value="{{ state }}">{{ state }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>Current Job Years</label><br>
+    <input type="number" name="CURRENT_JOB_YRS" required><br><br>
+
+    <label>Current House Years</label><br>
+    <input type="number" name="CURRENT_HOUSE_YRS" required><br><br>
+
+    <input type="submit" value="Predict">
+
+</form>
+
+{% if prediction %}
+
+    {% if prediction == "Low Risk" %}
+        <h2 style="color:green;">Prediction: {{ prediction }}</h2>
+    {% else %}
+        <h2 style="color:red;">Prediction: {{ prediction }}</h2>
+    {% endif %}
+
+    <h3>Confidence: {{ confidence }}%</h3>
+
+{% endif %}
+
+</body>
+</html>
