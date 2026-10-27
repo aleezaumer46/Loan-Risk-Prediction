@@ -1,86 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Loan Risk Prediction</title>\
-     <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Risk Prediction System | Banking AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<h1>Loan Risk Prediction System</h1>
+<header class="header">
+    <div class="header-container">
+        <div class="logo">
+            <span class="logo-icon">🏦</span>
+            <div class="logo-text">
+                <h2>Apex Credit Bank</h2>
+                <p>AI-Powered Intelligent Loan Risk Assessment System</p>
+            </div>
+        </div>
+        <div class="nav-links">
+            <span class="badge-tech">TensorFlow ANN</span>
+            <span class="badge-tech">Deep Learning</span>
+        </div>
+    </div>
+</header>
 
-<form action="/predict" method="POST">
+<main class="main-container">
+    <div class="card form-card">
+        <div class="card-header">
+            <h3>Loan Applicant Assessment Form</h3>
+            <p>Enter applicant demographic, employment, and housing details below for instant risk evaluation.</p>
+        </div>
 
-    <label>Income</label><br>
-    <input type="number" name="Income" required><br><br>
+        {% if error %}
+        <div class="alert alert-error">
+            <strong>Error:</strong> {{ error }}
+        </div>
+        {% endif %}
 
-    <label>Age</label><br>
-    <input type="number" name="Age" required><br><br>
+        <form action="/predict" method="POST" class="applicant-form">
+            <div class="form-grid">
+                <!-- Income -->
+                <div class="form-group">
+                    <label for="Income">Annual Income (₹)</label>
+                    <input type="number" id="Income" name="Income" min="0" step="1000" placeholder="e.g. 1300000" 
+                           value="{{ form_values['Income'] if form_values else '' }}" required>
+                </div>
 
-    <label>Experience</label><br>
-    <input type="number" name="Experience" required><br><br>
+                <!-- Age -->
+                <div class="form-group">
+                    <label for="Age">Applicant Age (Years)</label>
+                    <input type="number" id="Age" name="Age" min="18" max="100" placeholder="e.g. 28" 
+                           value="{{ form_values['Age'] if form_values else '' }}" required>
+                </div>
 
-    <label>Married/Single</label><br>
-    <select name="Married/Single">
-        <option value="single">Single</option>
-        <option value="married">Married</option>
-    </select><br><br>
+                <!-- Total Experience -->
+                <div class="form-group">
+                    <label for="Experience">Total Experience (Years)</label>
+                    <input type="number" id="Experience" name="Experience" min="0" max="60" placeholder="e.g. 5" 
+                           value="{{ form_values['Experience'] if form_values else '' }}" required>
+                </div>
 
-    <label>House Ownership</label><br>
-    <select name="House_Ownership">
-        <option value="owned">Owned</option>
-        <option value="rented">Rented</option>
-        <option value="norent_noown">No Rent No Own</option>
-    </select><br><br>
+                <!-- Current Job Years -->
+                <div class="form-group">
+                    <label for="CURRENT_JOB_YRS">Current Job Tenure (Years)</label>
+                    <input type="number" id="CURRENT_JOB_YRS" name="CURRENT_JOB_YRS" min="0" max="50" placeholder="e.g. 3" 
+                           value="{{ form_values['CURRENT_JOB_YRS'] if form_values else '' }}" required>
+                </div>
 
-    <label>Car Ownership</label><br>
-    <select name="Car_Ownership">
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-    </select><br><br>
+                <!-- Current House Years -->
+                <div class="form-group">
+                    <label for="CURRENT_HOUSE_YRS">Current House Tenure (Years)</label>
+                    <input type="number" id="CURRENT_HOUSE_YRS" name="CURRENT_HOUSE_YRS" min="0" max="50" placeholder="e.g. 12" 
+                           value="{{ form_values['CURRENT_HOUSE_YRS'] if form_values else '' }}" required>
+                </div>
 
-    <label>Profession</label><br>
-    <select name="Profession">
-        {% for p in professions %}
-            <option value="{{ p }}">{{ p }}</option>
-        {% endfor %}
-    </select><br><br>
+                <!-- Marital Status -->
+                <div class="form-group">
+                    <label for="Married/Single">Marital Status</label>
+                    <select id="Married/Single" name="Married/Single" required>
+                        {% for m in marital_statuses %}
+                            <option value="{{ m }}" {% if form_values and form_values['Married/Single'] == m %}selected{% endif %}>
+                                {{ m|capitalize }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <label>City</label><br>
-    <select name="CITY">
-        {% for city in cities %}
-            <option value="{{ city }}">{{ city }}</option>
-        {% endfor %}
-    </select><br><br>
+                <!-- House Ownership -->
+                <div class="form-group">
+                    <label for="House_Ownership">House Ownership</label>
+                    <select id="House_Ownership" name="House_Ownership" required>
+                        {% for h in house_ownerships %}
+                            <option value="{{ h }}" {% if form_values and form_values['House_Ownership'] == h %}selected{% endif %}>
+                                {{ h|replace('_', ' ')|title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <label>State</label><br>
-    <select name="STATE">
-        {% for state in states %}
-            <option value="{{ state }}">{{ state }}</option>
-        {% endfor %}
-    </select><br><br>
+                <!-- Car Ownership -->
+                <div class="form-group">
+                    <label for="Car_Ownership">Car Ownership</label>
+                    <select id="Car_Ownership" name="Car_Ownership" required>
+                        {% for c in car_ownerships %}
+                            <option value="{{ c }}" {% if form_values and form_values['Car_Ownership'] == c %}selected{% endif %}>
+                                {{ c|capitalize }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <label>Current Job Years</label><br>
-    <input type="number" name="CURRENT_JOB_YRS" required><br><br>
+                <!-- Profession -->
+                <div class="form-group full-width">
+                    <label for="Profession">Profession</label>
+                    <select id="Profession" name="Profession" required>
+                        {% for p in professions %}
+                            <option value="{{ p }}" {% if form_values and form_values['Profession'] == p %}selected{% endif %}>
+                                {{ p|replace('_', ' ') }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <label>Current House Years</label><br>
-    <input type="number" name="CURRENT_HOUSE_YRS" required><br><br>
+                <!-- City -->
+                <div class="form-group">
+                    <label for="CITY">City</label>
+                    <select id="CITY" name="CITY" required>
+                        {% for city in cities %}
+                            <option value="{{ city }}" {% if form_values and form_values['CITY'] == city %}selected{% endif %}>
+                                {{ city|replace('_', ' ') }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <input type="submit" value="Predict">
+                <!-- State -->
+                <div class="form-group">
+                    <label for="STATE">State</label>
+                    <select id="STATE" name="STATE" required>
+                        {% for state in states %}
+                            <option value="{{ state }}" {% if form_values and form_values['STATE'] == state %}selected{% endif %}>
+                                {{ state|replace('_', ' ') }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
-</form>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Run Loan Risk Prediction</button>
+            </div>
+        </form>
+    </div>
 
-{% if prediction %}
+    {% if prediction %}
+    <div class="card result-card {% if prediction == 'High Risk' %}result-high-risk{% else %}result-low-risk{% endif %}">
+        <div class="result-header">
+            <div class="result-badge-container">
+                <span class="status-indicator"></span>
+                <span class="result-title">{{ prediction }}</span>
+            </div>
+            <span class="risk-tier-tag">{{ risk_tier }}</span>
+        </div>
 
-    {% if prediction == "Low Risk" %}
-        <h2 style="color:green;">Prediction: {{ prediction }}</h2>
-    {% else %}
-        <h2 style="color:red;">Prediction: {{ prediction }}</h2>
+        <div class="metrics-grid">
+            <div class="metric-box">
+                <span class="metric-label">Model Confidence</span>
+                <span class="metric-value">{{ confidence }}%</span>
+            </div>
+            <div class="metric-box">
+                <span class="metric-label">Default Risk Probability</span>
+                <span class="metric-value">{{ risk_percentage }}%</span>
+            </div>
+            <div class="metric-box">
+                <span class="metric-label">Raw Sigmoid Output</span>
+                <span class="metric-value">{{ probability }}</span>
+            </div>
+        </div>
+
+        <div class="recommendation-box">
+            <h4>Underwriting Recommendation:</h4>
+            <p>{{ recommendation }}</p>
+        </div>
+    </div>
     {% endif %}
+</main>
 
-    <h3>Confidence: {{ confidence }}%</h3>
-
-{% endif %}
+<footer class="footer">
+    <p>Loan Risk Prediction System &bull; Intelligent Deep Learning Project &bull; BSAI Portfolio</p>
+</footer>
 
 </body>
 </html>
