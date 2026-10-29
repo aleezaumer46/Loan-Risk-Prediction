@@ -106,11 +106,8 @@ In imbalanced retail lending (87.7% non-defaulters vs 12.3% defaulters), accurac
 Loan-Risk-Prediction/
 │
 ├── Loan_Risk_Prediction.ipynb       # Complete 15-phase executed Jupyter Notebook
-├── app.py                           # Flask Web Application
-├── fastapi_app.py                   # FastAPI RESTful Microservice (Bonus deliverable)
-├── test_customers.py                # Phase 13: 10 customer empirical test suite
-├── generate_visualizations.py       # Script generating all EDA & evaluation charts
-├── generate_pdf_report.py           # Script compiling the publication PDF report
+├── app.py                           # Flask Web Application (Frontend & Backend)
+├── fastapi_app.py                   # FastAPI RESTful Microservice (API Documentation & Swagger UI)
 │
 ├── Loan Prediction.csv              # Full dataset (252,000 rows)
 ├── loan_risk_ann.keras              # Serialized production ANN model (Model C)
@@ -273,15 +270,7 @@ The system includes a production MySQL schema (`database/schema.sql`) modeling 5
 - `prediction_history`: AI audit log capturing model version, raw sigmoid score, confidence, and JSON feature payload for regulatory compliance (Model Risk Management / SR 11-7).
 - `underwriting_decisions`: Human underwriter sign-offs, counter-offers, and notes.
 
----
 
-## 📄 Rebuilding Reports & Artifacts
-
-- **Regenerate Visualization Figures:** `python generate_visualizations.py`
-- **Regenerate PDF Project Report:** `python generate_pdf_report.py`
-- **Regenerate Jupyter Notebook:** `python create_notebook.py`
-
----
 
 ## 👩‍💻 Author & Acknowledgements
 

@@ -12,9 +12,6 @@ uvicorn>=0.28.0
 pydantic>=2.5.0
 gunicorn>=21.2.0
 
-# Visualization & Reporting
+# Visualization & Analysis (for Jupyter Notebook)
 matplotlib>=3.8.0
 seaborn>=0.13.0
-reportlab>=4.0.0
-pypdf>=4.0.0
-nbformat>=5.9.0
